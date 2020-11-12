@@ -31,34 +31,24 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 
-public class EndPhantomEntity extends FlyingEntity implements IMob {
-    private static final DataParameter<Integer> SIZE = EntityDataManager.createKey(EndPhantomEntity.class, DataSerializers.VARINT);
+public class SpecterEntity extends FlyingEntity implements IMob {
+    private static final DataParameter<Integer> SIZE = EntityDataManager.createKey(SpecterEntity.class, DataSerializers.VARINT);
     private Vector3d orbitOffset = Vector3d.ZERO;
     private BlockPos orbitPosition = BlockPos.ZERO;
-    private EndPhantomEntity.AttackPhase attackPhase = EndPhantomEntity.AttackPhase.CIRCLE;
+    private SpecterEntity.AttackPhase attackPhase = SpecterEntity.AttackPhase.CIRCLE;
 
-    public EndPhantomEntity(EntityType<? extends EndPhantomEntity> type, World worldIn) {
+    public SpecterEntity(EntityType<? extends SpecterEntity> type, World worldIn) {
         super(type, worldIn);
         this.experienceValue = 5;
-        this.moveController = new EndPhantomEntity.MoveHelperController(this);
-        this.lookController = new EndPhantomEntity.LookHelperController(this);
+        this.moveController = new SpecterEntity.MoveHelperController(this);
+        this.lookController = new SpecterEntity.LookHelperController(this);
     }
 
-    public EndPhantomEntity(World worldIn){
-        super(ModEntityTypes.END_PHANTOM.get(), worldIn);
+    public SpecterEntity(World worldIn){
+        super(ModEntityTypes.SPECTER.get(), worldIn);
         this.experienceValue = 5;
-        this.moveController = new EndPhantomEntity.MoveHelperController(this);
-        this.lookController = new EndPhantomEntity.LookHelperController(this);
-    }
-
-    // MobEntity
-    public static AttributeModifierMap.MutableAttribute func_233666_p_() {
-        return LivingEntity.func_233639_cI_().func_233815_a_(Attributes.field_233819_b_, 16.0D).func_233814_a_(Attributes.field_233824_g_);
-    }
-
-    // LivingEntity
-    public static AttributeModifierMap.MutableAttribute func_233639_cI_() {
-        return AttributeModifierMap.func_233803_a_().func_233814_a_(Attributes.field_233818_a_).func_233814_a_(Attributes.field_233820_c_).func_233814_a_(Attributes.field_233821_d_).func_233814_a_(Attributes.field_233826_i_).func_233814_a_(Attributes.field_233827_j_).func_233814_a_(net.minecraftforge.common.ForgeMod.SWIM_SPEED.get()).func_233814_a_(net.minecraftforge.common.ForgeMod.NAMETAG_DISTANCE.get()).func_233814_a_(net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get());
+        this.moveController = new SpecterEntity.MoveHelperController(this);
+        this.lookController = new SpecterEntity.LookHelperController(this);
     }
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
@@ -72,15 +62,15 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
     }
 
     protected BodyController createBodyController() {
-        return new EndPhantomEntity.BodyHelperController(this);
+        return new SpecterEntity.BodyHelperController(this);
     }
 
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new EndPhantomEntity.PickAttackGoal());
+        this.goalSelector.addGoal(1, new SpecterEntity.PickAttackGoal());
         this.goalSelector.addGoal(2, new PursueElytraFlyerGoal());
-        this.goalSelector.addGoal(2, new EndPhantomEntity.SweepAttackGoal());
-        this.goalSelector.addGoal(3, new EndPhantomEntity.OrbitPointGoal());
-        this.targetSelector.addGoal(1, new EndPhantomEntity.AttackPlayerGoal());
+        this.goalSelector.addGoal(2, new SpecterEntity.SweepAttackGoal());
+        this.goalSelector.addGoal(3, new SpecterEntity.OrbitPointGoal());
+        this.targetSelector.addGoal(1, new SpecterEntity.AttackPlayerGoal());
     }
 
     protected void registerData() {
@@ -137,18 +127,6 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
             this.world.addParticle(ParticleTypes.MYCELIUM, this.getPosX() - (double)f2, this.getPosY() + (double)f4, this.getPosZ() - (double)f3, 0.0D, 0.0D, 0.0D);
         }
 
-    }
-
-    /**
-     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-     * use this to react to sunlight and start to burn.
-     */
-    public void livingTick() {
-        if (this.isAlive() && this.isInDaylight()) {
-            this.setFire(8);
-        }
-
-        super.livingTick();
     }
 
     protected void updateAITasks() {
@@ -251,15 +229,15 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
                 return false;
             } else {
                 this.tickDelay = 60;
-                List<PlayerEntity> list = EndPhantomEntity.this.world.getTargettablePlayersWithinAABB(this.entityPredicate, EndPhantomEntity.this, EndPhantomEntity.this.getBoundingBox().grow(16.0D, 64.0D, 16.0D));
+                List<PlayerEntity> list = SpecterEntity.this.world.getTargettablePlayersWithinAABB(this.entityPredicate, SpecterEntity.this, SpecterEntity.this.getBoundingBox().grow(16.0D, 64.0D, 16.0D));
                 if (!list.isEmpty()) {
                     list.sort(
                             Comparator.comparing(Entity::getPosY).reversed()
                     );
 
                     for(PlayerEntity playerentity : list) {
-                        if (EndPhantomEntity.this.canAttack(playerentity, EntityPredicate.DEFAULT)) {
-                            EndPhantomEntity.this.setAttackTarget(playerentity);
+                        if (SpecterEntity.this.canAttack(playerentity, EntityPredicate.DEFAULT)) {
+                            SpecterEntity.this.setAttackTarget(playerentity);
                             return true;
                         }
                     }
@@ -273,8 +251,8 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean shouldContinueExecuting() {
-            LivingEntity livingentity = EndPhantomEntity.this.getAttackTarget();
-            return livingentity != null && EndPhantomEntity.this.canAttack(livingentity, EntityPredicate.DEFAULT);
+            LivingEntity livingentity = SpecterEntity.this.getAttackTarget();
+            return livingentity != null && SpecterEntity.this.canAttack(livingentity, EntityPredicate.DEFAULT);
         }
     }
 
@@ -287,8 +265,8 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * Update the Head and Body rendenring angles
          */
         public void updateRenderAngles() {
-            EndPhantomEntity.this.rotationYawHead = EndPhantomEntity.this.renderYawOffset;
-            EndPhantomEntity.this.renderYawOffset = EndPhantomEntity.this.rotationYaw;
+            SpecterEntity.this.rotationYawHead = SpecterEntity.this.renderYawOffset;
+            SpecterEntity.this.renderYawOffset = SpecterEntity.this.rotationYaw;
         }
     }
 
@@ -310,7 +288,7 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
         }
 
         protected boolean withinOrbitOffset() {
-            return EndPhantomEntity.this.orbitOffset.squareDistanceTo(EndPhantomEntity.this.getPosX(), EndPhantomEntity.this.getPosY(), EndPhantomEntity.this.getPosZ()) < 4.0D;
+            return SpecterEntity.this.orbitOffset.squareDistanceTo(SpecterEntity.this.getPosX(), SpecterEntity.this.getPosY(), SpecterEntity.this.getPosZ()) < 4.0D;
         }
     }
 
@@ -322,44 +300,44 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
         }
 
         public void tick() {
-            if (EndPhantomEntity.this.collidedHorizontally) {
-                EndPhantomEntity.this.rotationYaw += 180.0F;
+            if (SpecterEntity.this.collidedHorizontally) {
+                SpecterEntity.this.rotationYaw += 180.0F;
                 this.speedFactor = 0.1F;
             }
 
-            float f = (float)(EndPhantomEntity.this.orbitOffset.x - EndPhantomEntity.this.getPosX());
-            float f1 = (float)(EndPhantomEntity.this.orbitOffset.y - EndPhantomEntity.this.getPosY());
-            float f2 = (float)(EndPhantomEntity.this.orbitOffset.z - EndPhantomEntity.this.getPosZ());
+            float f = (float)(SpecterEntity.this.orbitOffset.x - SpecterEntity.this.getPosX());
+            float f1 = (float)(SpecterEntity.this.orbitOffset.y - SpecterEntity.this.getPosY());
+            float f2 = (float)(SpecterEntity.this.orbitOffset.z - SpecterEntity.this.getPosZ());
             double d0 = (double)MathHelper.sqrt(f * f + f2 * f2);
             double d1 = 1.0D - (double)MathHelper.abs(f1 * 0.7F) / d0;
             f = (float)((double)f * d1);
             f2 = (float)((double)f2 * d1);
             d0 = (double)MathHelper.sqrt(f * f + f2 * f2);
             double d2 = (double)MathHelper.sqrt(f * f + f2 * f2 + f1 * f1);
-            float f3 = EndPhantomEntity.this.rotationYaw;
+            float f3 = SpecterEntity.this.rotationYaw;
             float f4 = (float)MathHelper.atan2((double)f2, (double)f);
-            float f5 = MathHelper.wrapDegrees(EndPhantomEntity.this.rotationYaw + 90.0F);
+            float f5 = MathHelper.wrapDegrees(SpecterEntity.this.rotationYaw + 90.0F);
             float f6 = MathHelper.wrapDegrees(f4 * (180F / (float)Math.PI));
-            EndPhantomEntity.this.rotationYaw = MathHelper.approachDegrees(f5, f6, 4.0F) - 90.0F;
-            EndPhantomEntity.this.renderYawOffset = EndPhantomEntity.this.rotationYaw;
-            if (MathHelper.degreesDifferenceAbs(f3, EndPhantomEntity.this.rotationYaw) < 3.0F) {
+            SpecterEntity.this.rotationYaw = MathHelper.approachDegrees(f5, f6, 4.0F) - 90.0F;
+            SpecterEntity.this.renderYawOffset = SpecterEntity.this.rotationYaw;
+            if (MathHelper.degreesDifferenceAbs(f3, SpecterEntity.this.rotationYaw) < 3.0F) {
                 this.speedFactor = MathHelper.approach(this.speedFactor, 1.8F, 0.005F * (1.8F / this.speedFactor));
             } else {
                 this.speedFactor = MathHelper.approach(this.speedFactor, 0.2F, 0.025F);
             }
 
             float f7 = (float)(-(MathHelper.atan2((double)(-f1), d0) * (double)(180F / (float)Math.PI)));
-            EndPhantomEntity.this.rotationPitch = f7;
-            float f8 = EndPhantomEntity.this.rotationYaw + 90.0F;
+            SpecterEntity.this.rotationPitch = f7;
+            float f8 = SpecterEntity.this.rotationYaw + 90.0F;
             double d3 = (double)(this.speedFactor * MathHelper.cos(f8 * ((float)Math.PI / 180F))) * Math.abs((double)f / d2);
             double d4 = (double)(this.speedFactor * MathHelper.sin(f8 * ((float)Math.PI / 180F))) * Math.abs((double)f2 / d2);
             double d5 = (double)(this.speedFactor * MathHelper.sin(f7 * ((float)Math.PI / 180F))) * Math.abs((double)f1 / d2);
-            Vector3d vector3d = EndPhantomEntity.this.getMotion();
-            EndPhantomEntity.this.setMotion(vector3d.add((new Vector3d(d3, d5, d4)).subtract(vector3d).scale(0.2D)));
+            Vector3d vector3d = SpecterEntity.this.getMotion();
+            SpecterEntity.this.setMotion(vector3d.add((new Vector3d(d3, d5, d4)).subtract(vector3d).scale(0.2D)));
         }
     }
 
-    class OrbitPointGoal extends EndPhantomEntity.MoveGoal {
+    class OrbitPointGoal extends SpecterEntity.MoveGoal {
         private float field_203150_c;
         private float field_203151_d;
         private float field_203152_e;
@@ -373,16 +351,16 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * method as well.
          */
         public boolean shouldExecute() {
-            return EndPhantomEntity.this.getAttackTarget() == null || EndPhantomEntity.this.attackPhase == EndPhantomEntity.AttackPhase.CIRCLE;
+            return SpecterEntity.this.getAttackTarget() == null || SpecterEntity.this.attackPhase == SpecterEntity.AttackPhase.CIRCLE;
         }
 
         /**
          * Execute a one shot task or start executing a continuous task
          */
         public void startExecuting() {
-            this.field_203151_d = 5.0F + EndPhantomEntity.this.rand.nextFloat() * 10.0F;
-            this.field_203152_e = -4.0F + EndPhantomEntity.this.rand.nextFloat() * 9.0F;
-            this.field_203153_f = EndPhantomEntity.this.rand.nextBoolean() ? 1.0F : -1.0F;
+            this.field_203151_d = 5.0F + SpecterEntity.this.rand.nextFloat() * 10.0F;
+            this.field_203152_e = -4.0F + SpecterEntity.this.rand.nextFloat() * 9.0F;
+            this.field_203153_f = SpecterEntity.this.rand.nextBoolean() ? 1.0F : -1.0F;
             this.updateOrbitPositionAndOffset();
         }
 
@@ -390,11 +368,11 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * Keep ticking a continuous task that has already been started
          */
         public void tick() {
-            if (EndPhantomEntity.this.rand.nextInt(350) == 0) {
-                this.field_203152_e = -4.0F + EndPhantomEntity.this.rand.nextFloat() * 9.0F;
+            if (SpecterEntity.this.rand.nextInt(350) == 0) {
+                this.field_203152_e = -4.0F + SpecterEntity.this.rand.nextFloat() * 9.0F;
             }
 
-            if (EndPhantomEntity.this.rand.nextInt(250) == 0) {
+            if (SpecterEntity.this.rand.nextInt(250) == 0) {
                 ++this.field_203151_d;
                 if (this.field_203151_d > 15.0F) {
                     this.field_203151_d = 5.0F;
@@ -402,8 +380,8 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
                 }
             }
 
-            if (EndPhantomEntity.this.rand.nextInt(450) == 0) {
-                this.field_203150_c = EndPhantomEntity.this.rand.nextFloat() * 2.0F * (float)Math.PI;
+            if (SpecterEntity.this.rand.nextInt(450) == 0) {
+                this.field_203150_c = SpecterEntity.this.rand.nextFloat() * 2.0F * (float)Math.PI;
                 this.updateOrbitPositionAndOffset();
             }
 
@@ -411,12 +389,12 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
                 this.updateOrbitPositionAndOffset();
             }
 
-            if (EndPhantomEntity.this.orbitOffset.y < EndPhantomEntity.this.getPosY() && !EndPhantomEntity.this.world.isAirBlock(EndPhantomEntity.this.func_233580_cy_().down(1))) {
+            if (SpecterEntity.this.orbitOffset.y < SpecterEntity.this.getPosY() && !SpecterEntity.this.world.isAirBlock(SpecterEntity.this.func_233580_cy_().down(1))) {
                 this.field_203152_e = Math.max(1.0F, this.field_203152_e);
                 this.updateOrbitPositionAndOffset();
             }
 
-            if (EndPhantomEntity.this.orbitOffset.y > EndPhantomEntity.this.getPosY() && !EndPhantomEntity.this.world.isAirBlock(EndPhantomEntity.this.func_233580_cy_().up(1))) {
+            if (SpecterEntity.this.orbitOffset.y > SpecterEntity.this.getPosY() && !SpecterEntity.this.world.isAirBlock(SpecterEntity.this.func_233580_cy_().up(1))) {
                 this.field_203152_e = Math.min(-1.0F, this.field_203152_e);
                 this.updateOrbitPositionAndOffset();
             }
@@ -424,12 +402,12 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
         }
 
         private void updateOrbitPositionAndOffset() {
-            if (BlockPos.ZERO.equals(EndPhantomEntity.this.orbitPosition)) {
-                EndPhantomEntity.this.orbitPosition = EndPhantomEntity.this.func_233580_cy_();
+            if (BlockPos.ZERO.equals(SpecterEntity.this.orbitPosition)) {
+                SpecterEntity.this.orbitPosition = SpecterEntity.this.func_233580_cy_();
             }
 
             this.field_203150_c += this.field_203153_f * 15.0F * ((float)Math.PI / 180F);
-            EndPhantomEntity.this.orbitOffset = Vector3d.func_237491_b_(EndPhantomEntity.this.orbitPosition).add((double)(this.field_203151_d * MathHelper.cos(this.field_203150_c)), (double)(-4.0F + this.field_203152_e), (double)(this.field_203151_d * MathHelper.sin(this.field_203150_c)));
+            SpecterEntity.this.orbitOffset = Vector3d.func_237491_b_(SpecterEntity.this.orbitPosition).add((double)(this.field_203151_d * MathHelper.cos(this.field_203150_c)), (double)(-4.0F + this.field_203152_e), (double)(this.field_203151_d * MathHelper.sin(this.field_203150_c)));
         }
     }
 
@@ -444,8 +422,8 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * method as well.
          */
         public boolean shouldExecute() {
-            LivingEntity livingentity = EndPhantomEntity.this.getAttackTarget();
-            return livingentity != null && EndPhantomEntity.this.canAttack(EndPhantomEntity.this.getAttackTarget(), EntityPredicate.DEFAULT);
+            LivingEntity livingentity = SpecterEntity.this.getAttackTarget();
+            return livingentity != null && SpecterEntity.this.canAttack(SpecterEntity.this.getAttackTarget(), EntityPredicate.DEFAULT);
         }
 
         /**
@@ -453,7 +431,7 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          */
         public void startExecuting() {
             this.tickDelay = 10;
-            EndPhantomEntity.this.attackPhase = EndPhantomEntity.AttackPhase.CIRCLE;
+            SpecterEntity.this.attackPhase = SpecterEntity.AttackPhase.CIRCLE;
             this.orbitTarget();
         }
 
@@ -461,27 +439,27 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * Reset the task's internal state. Called when this task is interrupted by another one
          */
         public void resetTask() {
-            EndPhantomEntity.this.orbitPosition = EndPhantomEntity.this.world.getHeight(Heightmap.Type.MOTION_BLOCKING, EndPhantomEntity.this.orbitPosition).up(10 + EndPhantomEntity.this.rand.nextInt(20));
+            SpecterEntity.this.orbitPosition = SpecterEntity.this.world.getHeight(Heightmap.Type.MOTION_BLOCKING, SpecterEntity.this.orbitPosition).up(10 + SpecterEntity.this.rand.nextInt(20));
         }
 
         /**
          * Keep ticking a continuous task that has already been started
          */
         public void tick() {
-            if (EndPhantomEntity.this.attackPhase == EndPhantomEntity.AttackPhase.CIRCLE) {
+            if (SpecterEntity.this.attackPhase == SpecterEntity.AttackPhase.CIRCLE) {
                 --this.tickDelay;
                 if (this.tickDelay <= 0) {
-                    if(EndPhantomEntity.this.getAttackTarget() != null && EndPhantomEntity.this.getAttackTarget().isElytraFlying()){
-                        EndPhantomEntity.this.attackPhase = EndPhantomEntity.AttackPhase.PURSUE;
+                    if(SpecterEntity.this.getAttackTarget() != null && SpecterEntity.this.getAttackTarget().isElytraFlying()){
+                        SpecterEntity.this.attackPhase = SpecterEntity.AttackPhase.PURSUE;
                         this.orbitTarget();
-                        this.tickDelay = (8 + EndPhantomEntity.this.rand.nextInt(4)) * 20;
-                        EndPhantomEntity.this.playSound(SoundEvents.ENTITY_PHANTOM_SWOOP, 10.0F, 0.95F + EndPhantomEntity.this.rand.nextFloat() * 0.1F);
+                        this.tickDelay = (8 + SpecterEntity.this.rand.nextInt(4)) * 20;
+                        SpecterEntity.this.playSound(SoundEvents.ENTITY_PHANTOM_SWOOP, 10.0F, 0.95F + SpecterEntity.this.rand.nextFloat() * 0.1F);
                     }
                     else{
-                        EndPhantomEntity.this.attackPhase = EndPhantomEntity.AttackPhase.SWOOP;
+                        SpecterEntity.this.attackPhase = SpecterEntity.AttackPhase.SWOOP;
                         this.orbitTarget();
-                        this.tickDelay = (8 + EndPhantomEntity.this.rand.nextInt(4)) * 20;
-                        EndPhantomEntity.this.playSound(SoundEvents.ENTITY_PHANTOM_SWOOP, 10.0F, 0.95F + EndPhantomEntity.this.rand.nextFloat() * 0.1F);
+                        this.tickDelay = (8 + SpecterEntity.this.rand.nextInt(4)) * 20;
+                        SpecterEntity.this.playSound(SoundEvents.ENTITY_PHANTOM_SWOOP, 10.0F, 0.95F + SpecterEntity.this.rand.nextFloat() * 0.1F);
                     }
                 }
             }
@@ -490,15 +468,15 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
 
         private void orbitTarget() {
             // func_233580_cy_ = getBlockPos()
-            EndPhantomEntity.this.orbitPosition = EndPhantomEntity.this.getAttackTarget().func_233580_cy_().up(20 + EndPhantomEntity.this.rand.nextInt(20));
-            if (EndPhantomEntity.this.orbitPosition.getY() < EndPhantomEntity.this.world.getSeaLevel()) {
-                EndPhantomEntity.this.orbitPosition = new BlockPos(EndPhantomEntity.this.orbitPosition.getX(), EndPhantomEntity.this.world.getSeaLevel() + 1, EndPhantomEntity.this.orbitPosition.getZ());
+            SpecterEntity.this.orbitPosition = SpecterEntity.this.getAttackTarget().func_233580_cy_().up(20 + SpecterEntity.this.rand.nextInt(20));
+            if (SpecterEntity.this.orbitPosition.getY() < SpecterEntity.this.world.getSeaLevel()) {
+                SpecterEntity.this.orbitPosition = new BlockPos(SpecterEntity.this.orbitPosition.getX(), SpecterEntity.this.world.getSeaLevel() + 1, SpecterEntity.this.orbitPosition.getZ());
             }
 
         }
     }
 
-    class SweepAttackGoal extends EndPhantomEntity.MoveGoal {
+    class SweepAttackGoal extends SpecterEntity.MoveGoal {
         private SweepAttackGoal() {
         }
 
@@ -507,14 +485,14 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * method as well.
          */
         public boolean shouldExecute() {
-            return EndPhantomEntity.this.getAttackTarget() != null && EndPhantomEntity.this.attackPhase == EndPhantomEntity.AttackPhase.SWOOP;
+            return SpecterEntity.this.getAttackTarget() != null && SpecterEntity.this.attackPhase == SpecterEntity.AttackPhase.SWOOP;
         }
 
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean shouldContinueExecuting() {
-            LivingEntity livingentity = EndPhantomEntity.this.getAttackTarget();
+            LivingEntity livingentity = SpecterEntity.this.getAttackTarget();
             if (livingentity == null) {
                 return false;
             } else if (!livingentity.isAlive()) {
@@ -523,8 +501,8 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
                 if (!this.shouldExecute()) {
                     return false;
                 } else {
-                    if (EndPhantomEntity.this.ticksExisted % 20 == 0) {
-                        List<CatEntity> list = EndPhantomEntity.this.world.getEntitiesWithinAABB(CatEntity.class, EndPhantomEntity.this.getBoundingBox().grow(16.0D), EntityPredicates.IS_ALIVE);
+                    if (SpecterEntity.this.ticksExisted % 20 == 0) {
+                        List<CatEntity> list = SpecterEntity.this.world.getEntitiesWithinAABB(CatEntity.class, SpecterEntity.this.getBoundingBox().grow(16.0D), EntityPredicates.IS_ALIVE);
                         if (!list.isEmpty()) {
                             for(CatEntity catentity : list) {
                                 catentity.func_213420_ej();
@@ -551,30 +529,30 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * Reset the task's internal state. Called when this task is interrupted by another one
          */
         public void resetTask() {
-            EndPhantomEntity.this.setAttackTarget((LivingEntity)null);
-            EndPhantomEntity.this.attackPhase = EndPhantomEntity.AttackPhase.CIRCLE;
+            SpecterEntity.this.setAttackTarget((LivingEntity)null);
+            SpecterEntity.this.attackPhase = SpecterEntity.AttackPhase.CIRCLE;
         }
 
         /**
          * Keep ticking a continuous task that has already been started
          */
         public void tick() {
-            LivingEntity livingentity = EndPhantomEntity.this.getAttackTarget();
-            EndPhantomEntity.this.orbitOffset = new Vector3d(livingentity.getPosX(), livingentity.getPosYHeight(0.5D), livingentity.getPosZ());
-            if (EndPhantomEntity.this.getBoundingBox().grow((double)0.2F).intersects(livingentity.getBoundingBox())) {
-                EndPhantomEntity.this.attackEntityAsMob(livingentity);
-                EndPhantomEntity.this.attackPhase = EndPhantomEntity.AttackPhase.CIRCLE;
-                if (!EndPhantomEntity.this.isSilent()) {
-                    EndPhantomEntity.this.world.playEvent(1039, EndPhantomEntity.this.func_233580_cy_(), 0);
+            LivingEntity livingentity = SpecterEntity.this.getAttackTarget();
+            SpecterEntity.this.orbitOffset = new Vector3d(livingentity.getPosX(), livingentity.getPosYHeight(0.5D), livingentity.getPosZ());
+            if (SpecterEntity.this.getBoundingBox().grow((double)0.2F).intersects(livingentity.getBoundingBox())) {
+                SpecterEntity.this.attackEntityAsMob(livingentity);
+                SpecterEntity.this.attackPhase = SpecterEntity.AttackPhase.CIRCLE;
+                if (!SpecterEntity.this.isSilent()) {
+                    SpecterEntity.this.world.playEvent(1039, SpecterEntity.this.func_233580_cy_(), 0);
                 }
-            } else if (EndPhantomEntity.this.collidedHorizontally || EndPhantomEntity.this.hurtTime > 0) {
-                EndPhantomEntity.this.attackPhase = EndPhantomEntity.AttackPhase.CIRCLE;
+            } else if (SpecterEntity.this.collidedHorizontally || SpecterEntity.this.hurtTime > 0) {
+                SpecterEntity.this.attackPhase = SpecterEntity.AttackPhase.CIRCLE;
             }
 
         }
     }
 
-    class PursueElytraFlyerGoal extends EndPhantomEntity.MoveGoal {
+    class PursueElytraFlyerGoal extends SpecterEntity.MoveGoal {
         private PursueElytraFlyerGoal() {
         }
 
@@ -583,16 +561,16 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * method as well.
          */
         public boolean shouldExecute() {
-            return EndPhantomEntity.this.getAttackTarget() != null
-                    && EndPhantomEntity.this.attackPhase == AttackPhase.PURSUE
-                    && EndPhantomEntity.this.getAttackTarget().isElytraFlying();
+            return SpecterEntity.this.getAttackTarget() != null
+                    && SpecterEntity.this.attackPhase == AttackPhase.PURSUE
+                    && SpecterEntity.this.getAttackTarget().isElytraFlying();
         }
 
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean shouldContinueExecuting() {
-            LivingEntity livingentity = EndPhantomEntity.this.getAttackTarget();
+            LivingEntity livingentity = SpecterEntity.this.getAttackTarget();
             if (livingentity == null) {
                 return false;
             } else if (!livingentity.isAlive()) {
@@ -603,8 +581,8 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
                 if (!this.shouldExecute()) {
                     return false;
                 } else {
-                    if (EndPhantomEntity.this.ticksExisted % 20 == 0) {
-                        List<CatEntity> list = EndPhantomEntity.this.world.getEntitiesWithinAABB(CatEntity.class, EndPhantomEntity.this.getBoundingBox().grow(16.0D), EntityPredicates.IS_ALIVE);
+                    if (SpecterEntity.this.ticksExisted % 20 == 0) {
+                        List<CatEntity> list = SpecterEntity.this.world.getEntitiesWithinAABB(CatEntity.class, SpecterEntity.this.getBoundingBox().grow(16.0D), EntityPredicates.IS_ALIVE);
                         if (!list.isEmpty()) {
                             for(CatEntity catentity : list) {
                                 catentity.func_213420_ej();
@@ -631,28 +609,28 @@ public class EndPhantomEntity extends FlyingEntity implements IMob {
          * Reset the task's internal state. Called when this task is interrupted by another one
          */
         public void resetTask() {
-            EndPhantomEntity.this.setAttackTarget((LivingEntity)null);
-            EndPhantomEntity.this.attackPhase = EndPhantomEntity.AttackPhase.CIRCLE;
+            SpecterEntity.this.setAttackTarget((LivingEntity)null);
+            SpecterEntity.this.attackPhase = SpecterEntity.AttackPhase.CIRCLE;
         }
 
         /**
          * Keep ticking a continuous task that has already been started
          */
         public void tick() {
-            LivingEntity elytraFlyer = EndPhantomEntity.this.getAttackTarget();
-            EndPhantomEntity.this.orbitOffset = new Vector3d(elytraFlyer.getPosX(), elytraFlyer.getPosYHeight(0.5D), elytraFlyer.getPosZ());
+            LivingEntity elytraFlyer = SpecterEntity.this.getAttackTarget();
+            SpecterEntity.this.orbitOffset = new Vector3d(elytraFlyer.getPosX(), elytraFlyer.getPosYHeight(0.5D), elytraFlyer.getPosZ());
 
             // Attack on collide
-            if (EndPhantomEntity.this.getBoundingBox().grow((double)0.2F).intersects(elytraFlyer.getBoundingBox())) {
-                EndPhantomEntity.this.attackEntityAsMob(elytraFlyer);
+            if (SpecterEntity.this.getBoundingBox().grow((double)0.2F).intersects(elytraFlyer.getBoundingBox())) {
+                SpecterEntity.this.attackEntityAsMob(elytraFlyer);
                 //EndPhantomEntity.this.attackPhase = EndPhantomEntity.AttackPhase.CIRCLE;
-                if (!EndPhantomEntity.this.isSilent()) {
-                    EndPhantomEntity.this.world.playEvent(1039, EndPhantomEntity.this.func_233580_cy_(), 0);
+                if (!SpecterEntity.this.isSilent()) {
+                    SpecterEntity.this.world.playEvent(1039, SpecterEntity.this.func_233580_cy_(), 0);
                 }
             }
             // If a wall was hit, go back to circling
-            else if (EndPhantomEntity.this.collidedHorizontally || EndPhantomEntity.this.hurtTime > 0) {
-                EndPhantomEntity.this.attackPhase = EndPhantomEntity.AttackPhase.CIRCLE;
+            else if (SpecterEntity.this.collidedHorizontally || SpecterEntity.this.hurtTime > 0) {
+                SpecterEntity.this.attackPhase = SpecterEntity.AttackPhase.CIRCLE;
             }
 
         }

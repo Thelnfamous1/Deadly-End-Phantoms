@@ -54,14 +54,15 @@ public class DeadlyEndPhantoms
     private void setup(final FMLCommonSetupEvent event)
     {
         DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(ModEntityTypes.END_PHANTOM.get(), EndPhantomEntity.setCustomAttributes().func_233813_a_());
+            GlobalEntityTypeAttributes.put(ModEntityTypes.SPECTER.get(), SpecterEntity.setCustomAttributes().func_233813_a_());
+            MobSpawner.setupMobSpawn();
+            EntitySpawnPlacements.initSpawnPlacements();
         });
 
-        MobSpawner.setupMobSpawn();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.END_PHANTOM.get(), EndPhantomRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.SPECTER.get(), SpecterRenderer::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event){

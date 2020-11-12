@@ -1,9 +1,7 @@
 package com.infamous.deadlyendphantoms.entity;
 
 import com.infamous.deadlyendphantoms.GeneralModConfig;
-import com.infamous.deadlyendphantoms.entity.ModEntityTypes;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,7 +20,7 @@ public class MobSpawner {
                 //         this.minGroupCount = minGroupCountIn;
                 //         this.maxGroupCount = maxGroupCountIn;
                 //      }
-                biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(ModEntityTypes.END_PHANTOM.get(),
+                biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(ModEntityTypes.SPECTER.get(),
                         GeneralModConfig.END_PHANTOM_SPAWN_WEIGHT.get(),
                         GeneralModConfig.END_PHANTOM_MIN_GROUP_SIZE.get(),
                         GeneralModConfig.END_PHANTOM_MAX_GROUP_SIZE.get()));

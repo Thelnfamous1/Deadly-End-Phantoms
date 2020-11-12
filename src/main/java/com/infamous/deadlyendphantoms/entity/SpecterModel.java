@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class EndPhantomModel<T extends Entity> extends SegmentedModel<T> {
+public class SpecterModel<T extends Entity> extends SegmentedModel<T> {
     private final ModelRenderer body;
     private final ModelRenderer leftWingBody;
     private final ModelRenderer leftWing;
@@ -18,7 +18,7 @@ public class EndPhantomModel<T extends Entity> extends SegmentedModel<T> {
     private final ModelRenderer tail1;
     private final ModelRenderer tail2;
 
-    public EndPhantomModel() {
+    public SpecterModel() {
         this.textureWidth = 64;
         this.textureHeight = 64;
         this.body = new ModelRenderer(this, 0, 8);
