@@ -1,7 +1,7 @@
 package com.infamous.deadlyendphantoms.entity;
 
 import com.infamous.deadlyendphantoms.DeadlyEndPhantoms;
-import com.infamous.deadlyendphantoms.GeneralModConfig;
+import com.infamous.deadlyendphantoms.config.GeneralModConfig;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.PhantomEntity;
 import net.minecraft.util.math.BlockPos;
