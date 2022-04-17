@@ -1,5 +1,6 @@
 package com.infamous.deadlyendphantoms;
 
+import com.infamous.deadlyendphantoms.config.DeadlyEndPhantomsConfig;
 import com.infamous.deadlyendphantoms.entity.*;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraftforge.common.MinecraftForge;
